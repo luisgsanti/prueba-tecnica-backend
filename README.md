@@ -1,59 +1,176 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧩 Sistema de Registro y Administración – Prueba Técnica
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema web fullstack desarrollado como prueba técnica, que permite el registro dinámico de usuarios (persona natural y jurídica) y la administración completa de los registros mediante un panel protegido con autenticación JWT.
 
-## About Laravel
+El sistema está compuesto por:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- 🌐 Aplicación pública de registro dinámico  
+- 🔐 Panel administrativo protegido  
+- 📡 API REST desarrollada en Laravel  
+- 🎨 SPA desarrollada en Angular 18  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# 🏗 Arquitectura del Proyecto
 
-## Learning Laravel
+El sistema está dividido en dos aplicaciones independientes:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Backend  → Laravel 12 (API REST + JWT)  
+Frontend → Angular 18 (SPA + Tailwind CSS)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Se implementó separación clara entre:
 
-## Laravel Sponsors
+- Módulo público
+- Módulo administrativo
+- Layouts independientes
+- Componentes reutilizables
+- Guards e interceptores
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+# ⚙️ Backend
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🧰 Tecnologías
 
-## Contributing
+- PHP 8.2.12
+- Laravel 12.x
+- MySQL 8+
+- JWT (tymon/jwt-auth)
+- Arquitectura REST API
+- CORS configurado manualmente
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🔐 Autenticación
 
-## Code of Conduct
+- Autenticación basada en JWT
+- Guard personalizado para administradores
+- Middleware protegido (`auth:admin`)
+- Manejo de excepciones personalizado
+- Protección de rutas administrativas
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🗂 Base de Datos
 
-## Security Vulnerabilities
+Modelo relacional compuesto por:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- `users`
+- `user_types`
+- `questions`
+- `answers`
+- `admin_users`
 
-## License
+### Relaciones implementadas:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- User → belongsTo UserType  
+- User → hasMany Answers  
+- Answer → belongsTo Question  
+
+## 📡 Endpoints principales
+
+### Público
+
+- `GET /user-types`
+- `GET /questions/{userTypeId}`
+- `POST /register`
+
+### Administración
+
+- `POST /admin/login`
+- `GET /admin/users`
+- `PATCH /admin/users/{id}/toggle-status`
+- `PATCH /admin/user-types/{id}/toggle`
+
+---
+
+# 🎨 Frontend
+
+## 🧰 Tecnologías
+
+- Angular 18 (Standalone Components)
+- TypeScript
+- Tailwind CSS
+- Reactive Forms
+- Angular Router
+- HTTP Interceptor
+- Functional Guards
+
+## 🧭 Arquitectura Frontend
+
+### Layouts
+
+- PublicLayout (sitio público)
+- AdminLayout (panel administrativo con sidebar responsive)
+
+### Componentes principales
+
+- Home (selección tipo de usuario)
+- Register (formulario dinámico)
+- AdminLogin
+- AdminDashboard (gestión de usuarios)
+- AdminUserTypes
+- UserDetailModal (modal independiente para visualizar datos completos)
+
+## 🔐 Seguridad
+
+- Interceptor JWT automático
+- AuthGuard para proteger rutas administrativas
+- Logout con limpieza de token
+- Protección en frontend y backend
+
+---
+
+# 🧩 Funcionalidades Implementadas
+
+## 🌐 Módulo Público
+
+- Selección dinámica de tipo de usuario
+- Formulario reactivo dinámico
+- Validaciones frontend y backend
+- Validación condicional para persona jurídica
+- Registro persistente en base de datos
+
+## 🔐 Panel Administrativo
+
+- Login protegido con JWT
+- Sidebar responsive
+- Gestión de usuarios
+- Deshabilitar / habilitar usuarios
+- Gestión de tipos de usuario
+- Deshabilitar / habilitar tipos
+- Visualización completa de los datos registrados
+- Modal independiente para detalle del usuario
+- Diseño responsive tipo SaaS
+
+---
+
+# 📱 Responsive Design
+
+- Sidebar colapsable en móvil
+- Tablas con scroll horizontal controlado
+- Layout adaptable
+- Diseño moderno y profesional
+
+---
+
+# 🛠 Versiones Utilizadas
+
+### Backend
+
+- PHP 8.2.12
+- Laravel 12.x
+- MySQL 8+
+
+### Frontend
+
+- Angular 18.x
+- Node 18+
+- Tailwind CSS 3+
+
+---
+
+# 🚀 Cómo ejecutar el proyecto
+
+## Backend
+
+```bash
+composer install
+php artisan migrate
+php artisan serve
